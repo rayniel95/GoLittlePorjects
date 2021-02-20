@@ -2,7 +2,6 @@ package compact
 
 import (
 	"bytes"
-	"fmt"
 	"strconv"
 )
 
@@ -30,10 +29,10 @@ func decompact(s []byte) []byte {
 			rightPart = append(rightPart, s[rightIndex])
 		}
 	}
-	fmt.Println()
-	fmt.Println(leftIndex)
-	fmt.Println(rightIndex)
-	fmt.Println(string(s))
+	// fmt.Println()
+	// fmt.Println(leftIndex)
+	// fmt.Println(rightIndex)
+	// fmt.Println(string(s))
 	repeatTime, _ := strconv.Atoi(string(reverseByte(number)))
 	temp := append(leftPart, bytes.Repeat(decompact(s[leftIndex+1:rightIndex]),
 		repeatTime)...)

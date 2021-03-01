@@ -6,11 +6,10 @@ import (
 )
 
 func toLCS(small string, large string) string {
-	myString := ""
-	best := &myString
-	lcs([]byte(small), []byte(large), best, []byte{}, 0, 0, 0)
+	best := ""
+	lcs([]byte(small), []byte(large), &best, []byte{}, 0, 0, 0)
 	fmt.Println(best)
-	return *best
+	return best
 }
 
 // bestString debe ser una referencia mientras actualString si necesito que

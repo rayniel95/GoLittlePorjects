@@ -11,7 +11,7 @@ func Test_aplana(t *testing.T) {
 		args args
 		want int
 	}{
-		{"test1", args{stacks: []int{0, 1, 2, 3}}, 3},
+		{"test1", args{stacks: []int{3, 1, 3, 5}}, 3},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -22,25 +22,25 @@ func Test_aplana(t *testing.T) {
 	}
 }
 
-func Test_aplanando(t *testing.T) {
-	type args struct {
-		stacks []int
-		movs   []mov
-		min    int
-		best   *[]mov
-	}
-	tests := []struct {
-		name string
-		args args
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			aplanando(tt.args.stacks, tt.args.movs, tt.args.min, tt.args.best)
-		})
-	}
-}
+// func Test_aplanando(t *testing.T) {
+// 	type args struct {
+// 		stacks []int
+// 		movs   []mov
+// 		min    int
+// 		best   *[]mov
+// 	}
+// 	tests := []struct {
+// 		name string
+// 		args args
+// 	}{
+// 		// TODO: Add test cases.
+// 	}
+// 	for _, tt := range tests {
+// 		t.Run(tt.name, func(t *testing.T) {
+// 			aplanando(tt.args.stacks, tt.args.movs, tt.args.min, tt.args.best)
+// 		})
+// 	}
+// }
 
 func Test_isAplaned(t *testing.T) {
 	type args struct {

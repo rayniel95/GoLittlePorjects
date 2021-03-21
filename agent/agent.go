@@ -1,16 +1,23 @@
 package agent
 
+// FIXME - este codigo no sirve, la idea de usar genericidad basandose en
+// interface{} no es factible para nada
 /*
-tratando de recrear IEnumerable y IEnumerator en go, un dolor de cabeza,
-todo un reto
+tratando de recrear IEnumerable y IEnumerator en go, todo un reto
 */
 type list struct {
 	index int
-	items []*interface{}
+	items interface{}
 }
 
 func buildList() *list {
-	return &list{index: -1, items: make([]*interface{}, 0)}
+	return &list{index: -1}
+}
+
+type IEnumerator interface {
+	moveNext() bool
+	current() interface{}
+	reset()
 }
 
 func (list *list) reset() {
@@ -18,7 +25,7 @@ func (list *list) reset() {
 }
 
 func (list *list) moveNext() bool {
-	if (*list).index+1 >= len((*list).items) {
+	if (*list).index+1 >= len((*list).items.([]interface{})) {
 		return false
 	}
 	(*list).index++
@@ -38,12 +45,6 @@ type suspectedList struct {
 
 func (suspectedList *suspectedList) getEnumerator() *IEnumerator {
 	return (*suspectedList).suspected
-}
-
-type IEnumerator interface {
-	moveNext() bool
-	current() *interface{}
-	reset()
 }
 
 type IEnumerable interface {
@@ -110,7 +111,10 @@ func (agent *agent) suspect() *suspectedList {
 			suspect = append(suspect, person)
 		}
 	}
-	return &suspectedList{suspected: buildList()}
+	list := buildList()
+	list.items = suspect
+	var enumerator IEnumerator = list
+	return &suspectedList{suspected: &enumerator}
 }
 
 func buildPerson() *Person {

@@ -13,8 +13,8 @@ type TrieNode struct {
 	sons    map[byte]*TrieNode
 }
 
-type Trie struct {
-	startWords map[byte]*TrieNode
+func initTrie() *TrieNode {
+	return &TrieNode{sons: make(map[byte]*TrieNode)}
 }
 
 func (trieNode *TrieNode) addSon(value byte, isEndWord bool) bool {
@@ -29,10 +29,12 @@ func (trieNode *TrieNode) addSon(value byte, isEndWord bool) bool {
 func (trieNode *TrieNode) addWord(word []byte) {
 	index := 0
 	node := trieNode
+
 	for index < len(word) && (*node).sons[word[index]] != nil {
-		index++
 		node = (*node).sons[word[index]]
+		index++
 	}
+
 	if index >= len(word) {
 		(*node).endWord = true
 		return

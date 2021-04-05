@@ -74,7 +74,7 @@ func applyOp(left *TreeNode, right *TreeNode, op operation) {
 	}
 }
 
-func orborear(left *TreeNode, right *TreeNode, op operation) *TreeNode {
+func arborear(left *TreeNode, right *TreeNode, op operation) *TreeNode {
 	newTree := left.copy()
 	queue := &Queue{}
 
@@ -96,4 +96,26 @@ func orborear(left *TreeNode, right *TreeNode, op operation) *TreeNode {
 
 func (node *TreeNode) isLeaf() bool {
 	return (*node).left == nil && (*node).right == nil
+}
+
+func equal(node, other *TreeNode) bool {
+	if ((*node).left != nil && (*other).left == nil) ||
+		((*node).right != nil && (*other).right == nil) ||
+		((*other).left != nil && (*node).left == nil) ||
+		((*other).right != nil && (*node).right == nil) {
+		return false
+	}
+
+	if (*node).value != (*other).value {
+		return false
+	}
+
+	if (*node).left != nil && !equal((*node).left, (*other).left) {
+		return false
+	}
+
+	if (*node).right != nil && !equal((*node).right, (*other).right) {
+		return false
+	}
+	return true
 }

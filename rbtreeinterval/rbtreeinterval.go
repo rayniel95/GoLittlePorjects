@@ -1,6 +1,9 @@
 package rbtreeinterval
 
-import errors
+import (
+	"errors"
+)
+
 // NOTE - simulating enums with static variables
 var red int8 = 0
 var black int8 = 1
@@ -380,13 +383,67 @@ func (tree *RBTree) deleteFixup(node *RBTreeNode) {
 	(*node).color = black
 }
 
-func insideInterval(actualNode *RBTreeNode, interval *[2]int, inside *LinkedList){
-	if (*actualNode).value
+func insideInterval(actualNode *RBTreeNode, interval *[2]int, inside *LinkedList) {
+	if (*actualNode).value < (*interval)[0] && (*actualNode).right != nil {
+		insideInterval((*actualNode).right, interval, inside)
+	} else if (*actualNode).value > (*interval)[1] && (*actualNode).left != nil {
+		insideInterval((*actualNode).left, interval, inside)
+	} else {
+		inside.add(actualNode)
+		if (*actualNode).left != nil {
+			left((*actualNode).left, interval, inside)
+		}
+		if (*actualNode).right != nil {
+			right((*actualNode).right, interval, inside)
+		}
+	}
+}
+
+func addAll(actualNode *RBTreeNode, inside *LinkedList) {
+	inside.add(actualNode)
+	if (*actualNode).left != nil {
+		addAll((*actualNode).left, inside)
+	}
+	if (*actualNode).right != nil {
+		addAll((*actualNode).right, inside)
+	}
+}
+
+func right(actualNode *RBTreeNode, interval *[2]int, inside *LinkedList) {
+	if (*actualNode).value <= (*interval)[1] && (*actualNode).value >= (*interval)[0] {
+		inside.add(actualNode)
+		if (*actualNode).left != nil {
+			addAll((*actualNode).left, inside)
+		}
+		if (*actualNode).right != nil {
+			right((*actualNode).right, interval, inside)
+		}
+		return
+	}
+	if (*actualNode).left != nil {
+		right((*actualNode).left, interval, inside)
+	}
+}
+
+func left(actualNode *RBTreeNode, interval *[2]int, inside *LinkedList) {
+	if (*actualNode).value <= (*interval)[1] && (*actualNode).value >= (*interval)[0] {
+		inside.add(actualNode)
+		if (*actualNode).right != nil {
+			addAll((*actualNode).right, inside)
+		}
+		if (*actualNode).left != nil {
+			left((*actualNode).left, interval, inside)
+		}
+		return
+	}
+	if (*actualNode).right != nil {
+		left((*actualNode).right, interval, inside)
+	}
 }
 
 type LinkedListNode struct {
 	next  *LinkedListNode
-	value int
+	value *RBTreeNode
 }
 
 type LinkedList struct {
@@ -395,7 +452,7 @@ type LinkedList struct {
 	lenght int
 }
 
-func (list *LinkedList) add(value int) {
+func (list *LinkedList) add(value *RBTreeNode) {
 	node := &LinkedListNode{value: value}
 	if (*list).lenght == 0 {
 		(*list).start = node
@@ -456,7 +513,7 @@ func (list *LinkedList) popIndex(popIndex int) (*LinkedListNode, error) {
 	return res, nil
 }
 
-func (list *LinkedList) insert(insertIndex, value int) error {
+func (list *LinkedList) insert(insertIndex int, value *RBTreeNode) error {
 	if insertIndex >= (*list).lenght || insertIndex < 0 {
 		return errors.New("index out of range")
 	}

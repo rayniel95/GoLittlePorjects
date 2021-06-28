@@ -1,5 +1,10 @@
 package rbtree
 
+import (
+	"bytes"
+	"log"
+)
+
 // NOTE - simulating enums with static variables
 var red int8 = 0
 var black int8 = 1
@@ -110,12 +115,14 @@ func (tree *RBTree) insertFixup(node *RBTreeNode) {
 			// se incumple la misma propiedad para el subarbol con raiz en el
 			// tatarabuelo por tanto el abuelo pasa a rojo, pero el tatara puede ser rojo
 			// por tanto se sigue buscando hacia arriba posibles problemas con el color
-			if (*uncle).color == red {
+			// notar que el tio puede no ser rojo y pudiera ser negro (y nil) en cuyo
+			// caso hay que tener cuidado con un puntero a null
+			if uncle != nil && (*uncle).color == red {
 				(*((*node).parent)).color = black // padre y tio seran negros
 				(*uncle).color = black
 				(*((*((*node).parent)).parent)).color = red // abuelo rojo
 				node = (*((*node).parent)).parent           // pasamos al abuelo
-			} else if node == (*((*node).parent)).right { // tio negro
+			} else if node == (*((*node).parent)).right { // tio negro, puede ser nil
 				// se hace una rotacion a la izquierda, la idea es convertir
 				// este caso en otro para que sea tratado por el proximo elif, con
 				// la rotacion el nodo pasa ahora a ser hijo izquierdo, notar que tanto
@@ -141,8 +148,9 @@ func (tree *RBTree) insertFixup(node *RBTreeNode) {
 				tree.rightRotation((*((*node).parent)).parent)
 			}
 		} else {
+			// puede ser nil que es black
 			uncle := (*((*((*node).parent)).parent)).left // y
-			if (*uncle).color == red {
+			if uncle != nil && (*uncle).color == red {
 				(*((*node).parent)).color = black
 				(*uncle).color = black
 				(*((*((*node).parent)).parent)).color = red
@@ -168,7 +176,8 @@ func min(subtree *RBTreeNode) *RBTreeNode {
 	return min((*subtree).left)
 }
 
-// metodo utilizado para sustituir un nodo por otro, el otro pudiera ser nil
+// metodo utilizado para sustituir un nodo (deletedNode) por otro (node),
+// el otro pudiera ser nil
 func (tree *RBTree) transplant(deletedNode, node *RBTreeNode) {
 	// si el padre es nil entonces el nodo que se va a eliminar era la raiz
 	// y hay que actualizar el valor con el nuevo nodo que vamos a poner
@@ -187,6 +196,29 @@ func (tree *RBTree) transplant(deletedNode, node *RBTreeNode) {
 	if node != nil {
 		(*node).parent = (*deletedNode).parent
 	}
+}
+
+func (tree *RBTree) search(key int) *RBTreeNode {
+	return searchValue((*tree).root, key)
+}
+
+func searchValue(actualNode *RBTreeNode, value int) *RBTreeNode {
+	if (*actualNode).value == value {
+		return actualNode
+	}
+	if (*actualNode).left != nil {
+		left := searchValue((*actualNode).left, value)
+		if left != nil {
+			return left
+		}
+	}
+	if (*actualNode).right != nil {
+		right := searchValue((*actualNode).right, value)
+		if right != nil {
+			return right
+		}
+	}
+	return nil
 }
 
 func (tree *RBTree) delete(node *RBTreeNode) {
@@ -256,6 +288,7 @@ func (tree *RBTree) delete(node *RBTreeNode) {
 }
 
 func (tree *RBTree) deleteFixup(node *RBTreeNode) {
+	// FIXME - node puede ser nil???s
 	// los casos no son excluyentes
 	// la idea de este algoritmo es arreglar el desbalance (ahora hay un negro menos)
 	// de negros creado
@@ -307,7 +340,7 @@ func (tree *RBTree) deleteFixup(node *RBTreeNode) {
 		if node == (*((*node).parent)).left {
 			brother := (*((*node).parent)).right // w
 			// este caso mediante recolorear y rotar se transforma en uno 2, 3 o 4
-			if (*brother).color == red { // caso 1
+			if brother != nil && (*brother).color == red { // caso 1
 				(*brother).color = black
 				(*((*node).parent)).color = red
 				tree.leftRotation((*node).parent)
@@ -377,4 +410,108 @@ func (tree *RBTree) deleteFixup(node *RBTreeNode) {
 		}
 	}
 	(*node).color = black
+}
+
+func (tree *RBTree) size() int {
+	return count((*tree).root)
+}
+
+func count(actualNode *RBTreeNode) int {
+	if actualNode == nil {
+		return 0
+	}
+	return 1 + count((*actualNode).left) + count((*actualNode).right)
+}
+
+// test functions
+func isABB(actualNode *RBTreeNode) bool {
+	if (*actualNode).right != nil &&
+		(*actualNode).value > (*((*actualNode).right)).value {
+		return false
+	}
+	if (*actualNode).left != nil &&
+		(*actualNode).value < (*((*actualNode).left)).value {
+		return false
+	}
+	if (*actualNode).left != nil && !isABB((*actualNode).left) {
+		return false
+	}
+	if (*actualNode).right != nil && !isABB((*actualNode).right) {
+		return false
+	}
+	return true
+}
+
+func RBTreeTestRedNodes(actualNode *RBTreeNode) bool {
+	if (*actualNode).color == red &&
+		!(((*actualNode).left != nil && (*((*actualNode).left)).color == black &&
+			(*actualNode).right != nil && (*((*actualNode).right)).color == black) ||
+			((*actualNode).left == nil && (*actualNode).right == nil)) {
+		return false
+	}
+
+	if (*actualNode).left != nil && !RBTreeTestRedNodes((*actualNode).left) {
+		return false
+	}
+	if (*actualNode).right != nil && !RBTreeTestRedNodes((*actualNode).right) {
+		return false
+	}
+	return true
+}
+
+func RBTreeTestBlackNodes(actualNode *RBTreeNode) bool {
+	if (*actualNode).color == black &&
+		(((*actualNode).left != nil && (*actualNode).right == nil &&
+			(*((*actualNode).left)).color == black) ||
+			((*actualNode).right != nil && (*actualNode).left == nil &&
+				(*((*actualNode).right)).color == black)) {
+		return false
+	}
+	if (*actualNode).left != nil && !RBTreeTestBlackNodes((*actualNode).left) {
+		return false
+	}
+	if (*actualNode).right != nil && !RBTreeTestBlackNodes((*actualNode).right) {
+		return false
+	}
+	return true
+}
+
+func RBTreeProperty4(actualNode *RBTreeNode) bool {
+	// for each subtree, all path from the root contain equal cantity
+	// of black nodes
+	return dfs(actualNode, 0, nil)
+}
+
+func dfs(actualNode *RBTreeNode, cantity int, total *int) bool {
+	if actualNode == nil {
+		if total == nil {
+			tmp := 0
+			total = &tmp
+			(*total) = cantity
+			return true
+		}
+		if (*total) != cantity {
+			return false
+		}
+		return true
+	}
+	if (*actualNode).color == black {
+		cantity++
+	}
+	return dfs((*actualNode).left, cantity, total) &&
+		dfs((*actualNode).right, cantity, total)
+}
+func rootBlack(tree *RBTree) bool {
+	// printTree((*tree).root, 1)
+	return (*((*tree).root)).color == black
+}
+
+func printTree(actualNode *RBTreeNode, level int, position string) {
+	log.Print(string(bytes.Repeat([]byte{byte('-')}, level)), (*actualNode).value, position)
+	if (*actualNode).left != nil {
+		printTree((*actualNode).left, level+1, " left")
+	}
+	if (*actualNode).right != nil {
+		printTree((*actualNode).right, level+1, " right")
+	}
 }

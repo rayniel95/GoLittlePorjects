@@ -225,6 +225,7 @@ func (tree *RBTree) delete(node *RBTreeNode) {
 	temp := node // y
 	nodeOriginalColor := (*temp).color
 	var child *RBTreeNode
+	var newChildParent *RBTreeNode
 	// si el hijo izquierdo es nil (da igual si el derecho tambien lo es)
 	// ponemos el hijo derecho en la posicion del nodo a eliminar, notar que el
 	// hijo derecho puede ser nil, en este caso el nodo a eliminar seria hoja, se
@@ -232,12 +233,14 @@ func (tree *RBTree) delete(node *RBTreeNode) {
 	// significa que ese hijo derecho es hoja, se hace el transplante sin problemas
 	if (*node).left == nil {
 		child = (*node).right // x
+		newChildParent = (*node).parent
 		tree.transplant(node, (*node).right)
 		//en caso de que el derecho sea nil y el izquierdo no nuevamente similar
 		// al caso anterior, el nodo tiene un solo hijo, el hijo izquierdo que es
 		// hoja, se hace el trasplante sin problemas
 	} else if (*node).right == nil {
 		child = (*node).left
+		newChildParent = (*node).parent
 		tree.transplant(node, (*node).left)
 		// de otra forma el nodo tiene los dos hijos, se busca el sucesor del mismo
 		// que vendra siendo el minimo entre sus hijos derechos. se almacena el
@@ -248,7 +251,8 @@ func (tree *RBTree) delete(node *RBTreeNode) {
 	} else {
 		temp = min((*node).right)
 		nodeOriginalColor = (*temp).color
-		child = (*temp).right
+		newChildParent = (*temp).parent
+		child = (*temp).right // child puede ser nil si temp no tiene hijo derecho
 		// estas dos lineas nunca las entendi, no les veo sentido mas alla que el
 		// de explicar mejor el codigo, si el padre del sucesor es el nodo que
 		// vamos a eliminar, esto significa que una vez pongamos el sucesor (hijo
@@ -259,6 +263,7 @@ func (tree *RBTree) delete(node *RBTreeNode) {
 		// hacen mas alla de separar este caso para mostrar mejor el algoritmo
 		if (*temp).parent == node {
 			(*child).parent = temp
+			newChildParent = temp
 			// se realiza el trasplante para la posicion del sucesor a el hijo
 			// derecho de este (no tiene hijo izquierdo) y se arreglan los punteros
 			// para el caso del sucesor con el hijo derecho del nodo que vamos
@@ -283,12 +288,11 @@ func (tree *RBTree) delete(node *RBTreeNode) {
 	}
 	// si el sucesor era black hay que arreglar el desbalance de negros creado
 	if nodeOriginalColor == black {
-		tree.deleteFixup(child)
+		tree.deleteFixup(child, newChildParent)
 	}
 }
 
-func (tree *RBTree) deleteFixup(node *RBTreeNode) {
-	// FIXME - node puede ser nil???s
+func (tree *RBTree) deleteFixup(node *RBTreeNode, nodeParent *RBTreeNode) {
 	// los casos no son excluyentes
 	// la idea de este algoritmo es arreglar el desbalance (ahora hay un negro menos)
 	// de negros creado
@@ -336,7 +340,7 @@ func (tree *RBTree) deleteFixup(node *RBTreeNode) {
 	// que si llegamos a la raiz de esta forma fuimos eliminando negros mientras
 	// subiamos. los casos 1 se transforman en casos 2, 3, 4 mediante recolorear
 	// y rotaciones y los casos 3 se transforman en casos 4.
-	for node != (*tree).root && (*node).color == black {
+	for node != (*tree).root && (node == nil || (*node).color == black) {
 		if node == (*((*node).parent)).left {
 			brother := (*((*node).parent)).right // w
 			// este caso mediante recolorear y rotar se transforma en uno 2, 3 o 4

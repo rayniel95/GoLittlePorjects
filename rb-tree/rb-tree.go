@@ -222,6 +222,9 @@ func searchValue(actualNode *RBTreeNode, value int) *RBTreeNode {
 }
 
 func (tree *RBTree) delete(node *RBTreeNode) {
+	if node == nil {
+		return
+	}
 	temp := node // y
 	nodeOriginalColor := (*temp).color
 	var child *RBTreeNode
@@ -262,8 +265,8 @@ func (tree *RBTree) delete(node *RBTreeNode) {
 		// nodo a eliminar, no hay que setear nuevamente, no me queda claro pq lo
 		// hacen mas alla de separar este caso para mostrar mejor el algoritmo
 		if (*temp).parent == node {
-			(*child).parent = temp
-			newChildParent = temp
+			// (*child).parent = temp
+			// newChildParent = temp
 			// se realiza el trasplante para la posicion del sucesor a el hijo
 			// derecho de este (no tiene hijo izquierdo) y se arreglan los punteros
 			// para el caso del sucesor con el hijo derecho del nodo que vamos
@@ -287,6 +290,7 @@ func (tree *RBTree) delete(node *RBTreeNode) {
 		(*temp).color = (*node).color
 	}
 	// si el sucesor era black hay que arreglar el desbalance de negros creado
+	// because child can be nil we put childParent too which will be != nil ever
 	if nodeOriginalColor == black {
 		tree.deleteFixup(child, newChildParent)
 	}
@@ -341,14 +345,14 @@ func (tree *RBTree) deleteFixup(node *RBTreeNode, nodeParent *RBTreeNode) {
 	// subiamos. los casos 1 se transforman en casos 2, 3, 4 mediante recolorear
 	// y rotaciones y los casos 3 se transforman en casos 4.
 	for node != (*tree).root && (node == nil || (*node).color == black) {
-		if node == (*((*node).parent)).left {
-			brother := (*((*node).parent)).right // w
+		if node == (*nodeParent).left {
+			brother := (*nodeParent).right // w
 			// este caso mediante recolorear y rotar se transforma en uno 2, 3 o 4
 			if brother != nil && (*brother).color == red { // caso 1
 				(*brother).color = black
-				(*((*node).parent)).color = red
-				tree.leftRotation((*node).parent)
-				brother = (*((*node).parent)).right
+				(*nodeParent).color = red
+				tree.leftRotation(nodeParent)
+				brother = (*nodeParent).right
 			}
 			// en este caso brother es negro, caso 2
 			// pintamos el nodo hermano de rojo y le pasamos el negro al padre
@@ -356,64 +360,71 @@ func (tree *RBTree) deleteFixup(node *RBTreeNode, nodeParent *RBTreeNode) {
 			// de negro, manteniendo la cantidad de negros que habian anteriormente
 			// si el nodo padre es negro pues entonces sera doble negro y tenemos
 			// el mismo problema que al inicio donde x era tambien doble negro
-			if (*((*brother).left)).color == black && (*((*brother).right)).color == black {
+			if ((*brother).left == nil || (*((*brother).left)).color == black) && ((*brother).right == nil || (*((*brother).right)).color == black) {
 				(*brother).color = red
-				node = (*node).parent
+				node = nodeParent
+				nodeParent = (*nodeParent).parent
 				// el hijo derecho de brother es negro y el izquierdo rojo, brother
 				// es negro, despues de recolorear y hacer la rotacion este caso se
 				// transforma en un caso 4 manteniendo la cantidad de negros
 				// existente anteriormente
-			} else if (*((*brother).right)).color == black { // caso 3
+			} else if (*brother).right == nil || (*((*brother).right)).color == black { // caso 3
 				(*((*brother).left)).color = black
 				(*brother).color = red
 				tree.rightRotation(brother)
-				brother = (*((*node).parent)).right
+				brother = (*nodeParent).right
 			}
 			// en esta caso se pone el color del padre al hermano, el padre pasa a
 			// ser negro junto al hijo derecho, se hace una rotacion en el padre
 			// a la izquierda, esto garantiza poner un nodo negro como padre de x,
 			// en la posicion donde antes estaba y, sin alterar la cantidad de
 			// negros en la otra rama ni las propiedades del rbtree
-			if (*((*brother).right)).color == red { // caso 4
-				(*brother).color = (*((*node).parent)).color
-				(*((*node).parent)).color = black
+			if (*brother).right != nil && (*((*brother).right)).color == red { // caso 4
+				(*brother).color = (*nodeParent).color
+				(*nodeParent).color = black
 				(*((*brother).right)).color = black
-				tree.leftRotation((*node).parent)
+				tree.leftRotation(nodeParent)
 				node = (*tree).root
+				nodeParent = nil
 			}
 		} else {
-			brother := (*((*node).parent)).left // w
-			if (*brother).color == red {        // caso 1
+			brother := (*nodeParent).left                  // w
+			if brother != nil && (*brother).color == red { // caso 1
 				(*brother).color = black
-				(*((*node).parent)).color = red
-				tree.rightRotation((*node).parent)
-				brother = (*((*node).parent)).left
+				(*nodeParent).color = red
+				tree.rightRotation(nodeParent)
+				brother = (*nodeParent).left
 			}
+			// log.Println((*brother).value)
 			// en este caso brother es negro
-			if (*((*brother).right)).color == black && (*((*brother).left)).color == black {
+			if ((*brother).right == nil || (*((*brother).right)).color == black) && ((*brother).left == nil || (*((*brother).left)).color == black) {
 				(*brother).color = red
-				node = (*node).parent
+				node = nodeParent
+				nodeParent = (*nodeParent).parent
 				// el hijo derecho de brother es negro y el izquierdo rojo, brother
 				// es negro, despues de recolorear y hacer la rotacion este caso se
 				// transforma en un caso 4 manteniendo la cantidad de negros
 				// existente anteriormente
-			} else if (*((*brother).left)).color == black { // caso 3
+			} else if (*brother).left == nil || (*((*brother).left)).color == black { // caso 3
 				(*((*brother).right)).color = black
 				(*brother).color = red
 				tree.leftRotation(brother)
-				brother = (*((*node).parent)).left
+				brother = (*nodeParent).left
 			}
 
-			if (*((*brother).left)).color == red { // caso 4
-				(*brother).color = (*((*node).parent)).color
-				(*((*node).parent)).color = black
+			if (*brother).left != nil && (*((*brother).left)).color == red { // caso 4
+				(*brother).color = (*nodeParent).color
+				(*nodeParent).color = black
 				(*((*brother).left)).color = black
-				tree.rightRotation((*node).parent)
+				tree.rightRotation(nodeParent)
 				node = (*tree).root
+				nodeParent = nil
 			}
 		}
 	}
-	(*node).color = black
+	if node != nil {
+		(*node).color = black
+	}
 }
 
 func (tree *RBTree) size() int {

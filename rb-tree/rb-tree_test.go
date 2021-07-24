@@ -272,8 +272,8 @@ func TestRBTree_insert(t *testing.T) {
 func TestRBTree_delete(t *testing.T) {
 	values := []int{
 		2, 50, 100, 60, 20, 1, 70, 55, 56, 57, 58, 59, 13, 12, 11,
-		10, 9, 8, 7, 100, 99, 98, 101, 102, 97, 96, 103, 95, 104, 105,
-		54, 53, 56,
+		10, 9, 8, 7, 99, 98, 101, 102, 97, 96, 103, 95, 104, 105,
+		54, 53,
 	}
 	tree := initRBTree()
 	for _, value := range values {
@@ -288,16 +288,62 @@ func TestRBTree_delete(t *testing.T) {
 		size int
 	}{
 		{
-			"test1", args{tree.search(56)}, 32,
+			"test1", args{tree.search(56)}, 30,
 		},
 		{
-			"test2", args{tree.search(56)}, 31,
+			"test2", args{tree.search(56)}, 29,
+		},
+		{
+			"test3", args{tree.search(7)}, 28,
+		},
+		{
+			"test4", args{tree.search(100)}, 27,
+		},
+		{
+			"test5", args{tree.search(103)}, 26,
+		},
+		{
+			"test6", args{tree.search(60)}, 25,
+		},
+		{
+			"test7", args{tree.search(50)}, 24,
+		},
+		{
+			"test8", args{tree.search(13)}, 23,
+		},
+		{
+			"test9", args{tree.search(54)}, 22,
+		},
+		{
+			"test10", args{tree.search(55)}, 21,
+		},
+		{
+			"test11", args{tree.search(9)}, 20,
+		},
+		{
+			"test12", args{tree.search(58)}, 19,
+		},
+		{
+			"test13", args{tree.search(70)}, 18,
+		},
+		{
+			"test14", args{tree.search(98)}, 17,
+		},
+		{
+			"test15", args{tree.search(101)}, 16,
+		},
+		{
+			"test16", args{tree.search(105)}, 15,
+		},
+		{
+			"test18", args{tree.search(59)}, 14,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tree.delete(tt.args.node)
 			if tree.size() != tt.size {
+				// t.Errorf("%v", tree.search(56))
 				t.Errorf("size() = %v, want %v", tree.size(), tt.size)
 			} else if !isABB((*tree).root) {
 				t.Errorf("is not an ABB")
@@ -312,7 +358,7 @@ func TestRBTree_delete(t *testing.T) {
 			}
 		})
 	}
-	printTree((*tree).root, 0, "root")
+	// printTree((*tree).root, 0, "root")
 }
 
 // func TestRBTree_deleteFixup(t *testing.T) {

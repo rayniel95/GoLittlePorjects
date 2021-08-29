@@ -16,7 +16,7 @@ RUN if [ "${INSTALL_NODE}" = "true" ]; then su vscode -c "umask 0002 && . /usr/l
 RUN export HTTP_PROXY="http://192.168.49.1:8282" \
     && export http_proxy="http://192.168.49.1:8282" \
     https_proxy="http://192.168.49.1:8282" \
-    && go get -x github.com/cweill/gotests/gotests  golang.org/x/tools/cmd/godoc
+    && go get -x github.com/cweill/gotests/gotests  golang.org/x/tools/cmd/godoc                 
 
 # [Optional] Uncomment this line to install global node packages.
 # RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g <your-package-here>" 2>&1

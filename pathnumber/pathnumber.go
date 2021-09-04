@@ -2,6 +2,7 @@ package pathnumber
 
 import (
 	"errors"
+	"log"
 )
 
 type LinkedListNode struct {
@@ -97,6 +98,23 @@ func (list *LinkedList) insert(insertIndex int, value *Vertex) error {
 	return nil
 }
 
+func (list *LinkedList) reverse() *LinkedList {
+	if (*list).lenght == 0 {
+		return nil
+	}
+	newList := &LinkedList{}
+
+	firstNode := (*list).start
+	newList.add((*firstNode).value)
+
+	actualNode := (*firstNode).next
+	for count := (*list).lenght - 1; count > 0; count-- {
+		newList.insert(0, (*actualNode).value)
+		actualNode = (*actualNode).next
+	}
+	return newList
+}
+
 type Vertex struct {
 	index   int
 	start   int
@@ -133,6 +151,7 @@ func trasposeG(graph []*LinkedList, vertexs []*Vertex) []*LinkedList {
 		for count := (*ady).lenght; count > 0; count-- {
 			actualVertex := (*actualLinkedNode).value
 			newGraph[(*actualVertex).index].add(vertexs[index])
+			actualLinkedNode = (*actualLinkedNode).next
 		}
 	}
 	return newGraph
@@ -144,6 +163,9 @@ func pathCount(graph []*LinkedList, a *Vertex, b *Vertex, vertexs []*Vertex) int
 	time := 0
 
 	topologicalSort(graph, sort, a, &time)
+	// printSortList(sort)
+	sort = sort.reverse()
+	printSortList(sort)
 
 	(*a).paths = 1
 	actualNode := (*((*sort).start)).next
@@ -158,5 +180,19 @@ func pathCount(graph []*LinkedList, a *Vertex, b *Vertex, vertexs []*Vertex) int
 		}
 		actualNode = (*actualNode).next
 	}
+	for index, vertex := range vertexs {
+		log.Println(index, (*vertex).paths)
+	}
 	return (*b).paths
+}
+
+// TODO - organize code in new files accesible from each other file
+func printSortList(list *LinkedList) {
+	actualNode := (*list).start
+	for count := (*list).lenght; count > 0; count-- {
+		vertex := (*actualNode).value
+
+		log.Println((*vertex).index)
+		actualNode = (*actualNode).next
+	}
 }

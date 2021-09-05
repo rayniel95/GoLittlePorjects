@@ -98,7 +98,7 @@ func (list *LinkedList) insert(insertIndex int, value *Vertex) error {
 }
 
 func (list *LinkedList) addList(other *LinkedList) {
-	if (*other).lenght == 0 {
+	if (*list).lenght == 0 || (*other).lenght == 0 {
 		return
 	}
 	(*list).lenght += (*other).lenght
@@ -107,7 +107,6 @@ func (list *LinkedList) addList(other *LinkedList) {
 }
 
 type Vertex struct {
-	value int
 	index int
 	color int
 }

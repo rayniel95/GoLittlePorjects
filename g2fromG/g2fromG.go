@@ -175,6 +175,7 @@ func buildG2(secondLevel []*LinkedList, vertex []*Vertex, incidenceList []*Linke
 	return g2
 }
 
+// NOTE - O(VE)
 func g2(graph [][]bool) [][]bool {
 	vertexs := make([]*Vertex, len(graph))
 	for index := 0; index < len(vertexs); index++ {

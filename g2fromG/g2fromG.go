@@ -98,7 +98,13 @@ func (list *LinkedList) insert(insertIndex int, value *Vertex) error {
 }
 
 func (list *LinkedList) addList(other *LinkedList) {
-	if (*list).lenght == 0 || (*other).lenght == 0 {
+	if (*other).lenght == 0 {
+		return
+	}
+	if (*list).lenght == 0 {
+		(*list).lenght = (*other).lenght
+		(*list).start = (*other).start
+		(*list).end = (*other).end
 		return
 	}
 	(*list).lenght += (*other).lenght
@@ -134,10 +140,10 @@ func secondLevelIncidence(incidenceList []*LinkedList) []*LinkedList {
 		secondLevel[index] = &LinkedList{}
 	}
 	for index := 0; index < len(secondLevel); index++ {
-		actualVertex := (*incidenceList[index]).start
+		actualNode := (*incidenceList[index]).start
 		for cantity := (*incidenceList[index]).lenght; cantity > 0; cantity-- {
-			secondLevel[index].addList(incidenceList[(*((*actualVertex).value)).index])
-			actualVertex = (*actualVertex).next
+			secondLevel[index].addList(incidenceList[(*((*actualNode).value)).index])
+			actualNode = (*actualNode).next
 		}
 	}
 	return secondLevel
@@ -151,7 +157,7 @@ func DFS(list *LinkedList, index int, g2 [][]bool, incidenceList []*LinkedList) 
 			g2[index][(*((*actualNode).value)).index] = true
 			DFS(incidenceList[(*((*actualNode).value)).index], index, g2, incidenceList)
 		}
-
+		actualNode = (*actualNode).next
 	}
 }
 

@@ -266,6 +266,7 @@ func Test_g2(t *testing.T) {
 					[]bool{false, false, false, false, true, false},
 				},
 			},
+			// NOTE - this testcase is not correct
 			want: [][]bool{
 				[]bool{false, false, false, false, false},
 				[]bool{true, false, false, false, false},

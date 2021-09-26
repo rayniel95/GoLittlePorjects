@@ -51,3 +51,15 @@ func mitad(node *Node, other *Node) bool {
 	}
 	return true
 }
+
+func solveMitad(node *Node) *Node{
+	subtrees:=node.recolectSubTrees()
+	for _, sub:=range subtrees{
+		(*sub).taken=true
+		if mitad(node, sub){
+			return sub
+		}
+		(*sub).taken=false
+	}
+	return nil
+}

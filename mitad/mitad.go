@@ -3,19 +3,19 @@ package mitad
 type Node struct {
 	value int
 	sons  []*Node
-	token bool
+	taken bool
 }
 
 func (node *Node) equal(other *Node) bool {
 	length_other := 0
 	for _, son := range (*other).sons {
-		if !(*son).token {
+		if !(*son).taken {
 			length_other++
 		}
 	}
 	length_this := 0
 	for _, son := range (*node).sons {
-		if !(*son).token {
+		if !(*son).taken {
 			length_this++
 		}
 	}
@@ -39,7 +39,7 @@ func mitad(node *Node, other *Node) bool {
 	}
 	has_taken := false
 	for index, son := range (*node).sons {
-		if (*son).token {
+		if (*son).taken {
 			has_taken = true
 		}
 		if has_taken && !mitad(son, (*other).sons[index-1]) {

@@ -3,6 +3,61 @@ package mitad
 import "testing"
 
 func Test_mitad(t *testing.T) {
+	subtree:= &Node{
+		value: 4,
+		sons: []*Node{
+			&Node{
+				value: 4,
+				sons: []*Node{},
+			},
+			&Node{
+				value: 2,
+				sons: []*Node{
+					&Node{
+						value: 1,
+						sons: []*Node{},
+					},
+					&Node{
+						value: 7,
+						sons: []*Node{},
+					},
+					&Node{
+						value: 9,
+						sons: []*Node{},
+					},
+				},
+			},
+		},
+	}
+	
+	tree:= &Node{
+		value: 4,
+		sons: []*Node{
+			&Node{
+				value: 4,
+				sons: []*Node{},
+			},
+			&Node{
+				value: 2,
+				sons: []*Node{
+					&Node{
+						value: 1,
+						sons: []*Node{},
+					},
+					subtree,
+					&Node{
+						value: 7,
+						sons: []*Node{},
+					},
+					&Node{
+						value: 9,
+						sons: []*Node{},
+					},
+				},
+			},
+		},
+	}
+
 	type args struct {
 		node  *Node
 		other *Node
@@ -12,7 +67,14 @@ func Test_mitad(t *testing.T) {
 		args args
 		want bool
 	}{
-		// TODO: Add test cases.
+		{
+			"test1",
+			args{
+				tree,
+				subtree,
+			},
+			true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

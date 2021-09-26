@@ -23,3 +23,12 @@ func (node *Node) equal(other *Node) bool {
 }
 
 // TODO - restruncture the workspace for import modules
+func (node *Node) recolectSubTrees() []*Node {
+	array := make([]*Node, len((*node).sons))
+	array = append(array, (*node).sons...)
+
+	for _, son := range (*node).sons {
+		array = append(array, son.recolectSubTrees()...)
+	}
+	return array
+}

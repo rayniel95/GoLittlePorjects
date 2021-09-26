@@ -4,6 +4,7 @@ import "testing"
 
 func Test_mitad(t *testing.T) {
 	subtree:= &Node{
+		taken: true,
 		value: 4,
 		sons: []*Node{
 			&Node{

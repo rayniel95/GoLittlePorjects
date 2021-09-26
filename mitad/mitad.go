@@ -24,7 +24,7 @@ func (node *Node) equal(other *Node) bool {
 
 // TODO - restruncture the workspace for import modules
 func (node *Node) recolectSubTrees() []*Node {
-	array := make([]*Node, len((*node).sons))
+	array := make([]*Node, 0)
 	array = append(array, (*node).sons...)
 
 	for _, son := range (*node).sons {
@@ -63,3 +63,4 @@ func solveMitad(node *Node) *Node{
 	}
 	return nil
 }
+ 

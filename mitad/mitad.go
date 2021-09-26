@@ -41,6 +41,7 @@ func mitad(node *Node, other *Node) bool {
 	for index, son := range (*node).sons {
 		if (*son).taken {
 			has_taken = true
+			continue
 		}
 		if has_taken && !mitad(son, (*other).sons[index-1]) {
 			return false

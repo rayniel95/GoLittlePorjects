@@ -32,3 +32,21 @@ func (node *Node) recolectSubTrees() []*Node {
 	}
 	return array
 }
+
+func mitad(node *Node, other *Node) bool {
+	if !node.equal(other) {
+		return false
+	}
+	has_taken := false
+	for index, son := range (*node).sons {
+		if (*son).token {
+			has_taken = true
+		}
+		if has_taken && !mitad(son, (*other).sons[index-1]) {
+			return false
+		} else if !has_taken && !mitad(son, (*other).sons[index]) {
+			return false
+		}
+	}
+	return true
+}

@@ -1,6 +1,8 @@
 package permutations
 
-import "testing"
+import (
+	"testing"
+)
 
 func Test_permuting(t *testing.T) {
 	type args struct {
@@ -12,6 +14,7 @@ func Test_permuting(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
+		want int
 	}{
 		{
 			"test1",
@@ -21,11 +24,14 @@ func Test_permuting(t *testing.T) {
 				make([]int, 4),
 				0,
 			},
+			24,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			permuting(tt.args.original, tt.args.selected, tt.args.permuted, tt.args.call)
+			if got := permuting(tt.args.original, tt.args.selected, tt.args.permuted, tt.args.call); got != tt.want {
+				t.Errorf("permuting() = %v, want %v", got, tt.want)
+			}
 		})
 	}
 }

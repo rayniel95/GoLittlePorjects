@@ -1,18 +1,17 @@
 package permutations
 
-import "fmt"
-
-func permuting(original []int, selected []bool, permuted []int, call int) {
+func permuting(original []int, selected []bool, permuted []int, call int) int {
 	if call >= len(original) {
-		fmt.Println(permuted)
-		return
+		return 1
 	}
+	times := 0
 	for index := 0; index < len(original); index++ {
 		if !selected[index] {
 			selected[index] = true
 			permuted[index] = original[call]
-			permuting(original, selected, permuted, call+1)
+			times += permuting(original, selected, permuted, call+1)
 			selected[index] = false
 		}
 	}
+	return times
 }

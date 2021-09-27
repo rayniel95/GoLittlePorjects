@@ -10,7 +10,7 @@ func permuting(original []int, selected []bool, permuted []int, call int) {
 	for index := 0; index < len(original); index++ {
 		if !selected[index] {
 			selected[index] = true
-			permuted[index] = original[index]
+			permuted[index] = original[call]
 			permuting(original, selected, permuted, call+1)
 			selected[index] = false
 		}

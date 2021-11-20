@@ -59,3 +59,15 @@ func (tree *HeapTree) update(node *HeapNode) {
 	node.heapifyDown()
 	node.heapifyUp()
 }
+
+type LinkedNode struct {
+	next *LinkedNode
+	prev *LinkedNode
+	val  *HeapNode
+}
+
+type HeapTree struct {
+	start        *LinkedNode
+	end          *LinkedNode
+	parentOfLast *LinkedNode
+}

@@ -45,3 +45,12 @@ func (node *HeapNode) heapifyDown() error {
 	}
 	return nil
 }
+
+func (node *HeapNode) heapifyUp() {
+	if (*node).parent != nil && (*((*((*node).parent)).cell)).priority > (*((*node).cell)).priority {
+		temp := (*((*node).parent)).cell
+		(*((*node).parent)).cell = (*node).cell
+		(*node).cell = temp
+		(*node).parent.heapifyUp()
+	}
+}

@@ -141,3 +141,14 @@ func topologicalSortInDegree(graph []*LinkedList, vertexs []*Vertex) *LinkedList
 	}
 	return topologicalSort
 }
+
+func (list *LinkedList) intoArray() []int {
+	result := make([]int, (*list).lenght)
+	actualNode := (*list).start
+	for count := (*list).lenght; count > 0; count-- {
+		actualVertex := (*actualNode).value
+		result[(*list).lenght-count] = (*actualVertex).index
+		actualNode = (*actualNode).next
+	}
+	return result
+}

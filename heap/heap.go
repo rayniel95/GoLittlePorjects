@@ -78,3 +78,59 @@ func (tree *HeapTree) peek() (error, *Cell) {
 	}
 	return errors.New("Empty Heap"), nil
 }
+
+func (tree *HeapTree) add(value *interface{}, priority uint32) {
+	if (*tree).start == nil {
+		newLinkedNode := &LinkedNode{
+			val: newHeapNode(value, priority),
+		}
+		(*tree).start = newLinkedNode
+		(*tree).end = newLinkedNode
+		return
+	}
+	if (*tree).start == (*tree).end {
+		(*tree).parentOfLast = (*tree).start
+		parentHeapNode := (*((*tree).start)).val
+		newHeapNode := &HeapNode{
+			cell: &Cell{
+				value:    value,
+				priority: priority,
+			},
+			parent: parentHeapNode,
+		}
+		(*parentHeapNode).left = newHeapNode
+		newLinkedNode := &LinkedNode{
+			prev: (*tree).start,
+			val:  newHeapNode,
+		}
+		(*((*tree).start)).next = newLinkedNode
+		(*tree).end = newLinkedNode
+		return
+	}
+
+	newHeapNode := &HeapNode{
+		cell: &Cell{
+			value:    value,
+			priority: priority,
+		},
+	}
+
+	parent := (*((*tree).parentOfLast)).val
+	if (*parent).right == nil {
+		(*parent).right = newHeapNode
+	} else {
+		(*tree).parentOfLast = (*((*tree).parentOfLast)).next
+		parent = (*((*tree).parentOfLast)).val
+		(*parent).left = newHeapNode
+	}
+	(*newHeapNode).parent = parent
+
+	newLinkedNode := &LinkedNode{
+		prev: (*tree).end,
+		val:  newHeapNode,
+	}
+	(*((*tree).end)).next = newLinkedNode
+	(*tree).end = newLinkedNode
+
+	newHeapNode.heapifyUp()
+}

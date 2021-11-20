@@ -134,3 +134,36 @@ func (tree *HeapTree) add(value *interface{}, priority uint32) {
 
 	newHeapNode.heapifyUp()
 }
+
+func (tree *HeapTree) deleteMin() (error, *Cell) {
+	if (*tree).start == nil {
+		return errors.New("empty heap"), nil
+	}
+	_, min := (*tree).peek()
+	lastNode := (*((*tree).end)).val
+	valueOfLast := (*lastNode).cell
+
+	parent := (*((*tree).parentOfLast)).val
+	if parent != nil {
+		if (*parent).right == lastNode {
+			(*parent).right = nil
+		} else if (*parent).left == lastNode {
+			(*parent).left = nil
+			(*tree).parentOfLast = (*((*tree).parentOfLast)).prev
+		} else {
+			return errors.New("bad heap structure"), nil
+		}
+	}
+	(*tree).end = (*((*tree).end)).prev
+	if (*tree).end != nil {
+		(*((*tree).end)).next = nil
+	} else {
+		(*tree).start = nil
+	}
+
+	if (*tree).start != nil {
+		(*((*((*tree).start)).val)).cell = valueOfLast
+		(*((*tree).start)).val.heapifyDown()
+	}
+	return nil, min
+}

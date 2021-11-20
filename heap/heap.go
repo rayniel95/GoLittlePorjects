@@ -54,3 +54,8 @@ func (node *HeapNode) heapifyUp() {
 		(*node).parent.heapifyUp()
 	}
 }
+
+func (tree *HeapTree) update(node *HeapNode) {
+	node.heapifyDown()
+	node.heapifyUp()
+}

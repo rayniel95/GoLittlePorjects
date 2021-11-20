@@ -71,3 +71,10 @@ type HeapTree struct {
 	end          *LinkedNode
 	parentOfLast *LinkedNode
 }
+
+func (tree *HeapTree) peek() (error, *Cell) {
+	if (*tree).start != nil {
+		return nil, (*((*((*tree).start)).val)).cell
+	}
+	return errors.New("Empty Heap"), nil
+}

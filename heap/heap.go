@@ -3,7 +3,7 @@ package heap
 import "errors"
 
 type Cell struct {
-	value    *interface{}
+	value    interface{}
 	priority uint32
 }
 
@@ -14,7 +14,7 @@ type HeapNode struct {
 	parent *HeapNode
 }
 
-func newHeapNode(value *interface{}, priority uint32) *HeapNode {
+func newHeapNode(value interface{}, priority uint32) *HeapNode {
 	return &HeapNode{
 		cell: &Cell{value: value, priority: priority},
 	}
@@ -79,7 +79,7 @@ func (tree *HeapTree) peek() (error, *Cell) {
 	return errors.New("Empty Heap"), nil
 }
 
-func (tree *HeapTree) add(value *interface{}, priority uint32) {
+func (tree *HeapTree) add(value interface{}, priority uint32) {
 	if (*tree).start == nil {
 		newLinkedNode := &LinkedNode{
 			val: newHeapNode(value, priority),

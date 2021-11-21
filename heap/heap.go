@@ -14,7 +14,7 @@ type HeapNode struct {
 	parent *HeapNode
 }
 
-func newHeapNode(value interface{}, priority uint32) *HeapNode {
+func NewHeapNode(value interface{}, priority uint32) *HeapNode {
 	return &HeapNode{
 		cell: &Cell{value: value, priority: priority},
 	}
@@ -55,7 +55,7 @@ func (node *HeapNode) heapifyUp() {
 	}
 }
 
-func (tree *HeapTree) update(node *HeapNode) {
+func (tree *HeapTree) Update(node *HeapNode) {
 	node.heapifyDown()
 	node.heapifyUp()
 }
@@ -72,17 +72,17 @@ type HeapTree struct {
 	parentOfLast *LinkedNode
 }
 
-func (tree *HeapTree) peek() (error, *Cell) {
+func (tree *HeapTree) Peek() (error, *Cell) {
 	if (*tree).start != nil {
 		return nil, (*((*((*tree).start)).val)).cell
 	}
 	return errors.New("Empty Heap"), nil
 }
 
-func (tree *HeapTree) add(value interface{}, priority uint32) {
+func (tree *HeapTree) Add(value interface{}, priority uint32) {
 	if (*tree).start == nil {
 		newLinkedNode := &LinkedNode{
-			val: newHeapNode(value, priority),
+			val: NewHeapNode(value, priority),
 		}
 		(*tree).start = newLinkedNode
 		(*tree).end = newLinkedNode
@@ -135,11 +135,11 @@ func (tree *HeapTree) add(value interface{}, priority uint32) {
 	newHeapNode.heapifyUp()
 }
 
-func (tree *HeapTree) deleteMin() (error, *Cell) {
+func (tree *HeapTree) DeleteMin() (error, *Cell) {
 	if (*tree).start == nil {
 		return errors.New("empty heap"), nil
 	}
-	_, min := (*tree).peek()
+	_, min := (*tree).Peek()
 	lastNode := (*((*tree).end)).val
 	valueOfLast := (*lastNode).cell
 

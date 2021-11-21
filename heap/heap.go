@@ -1,10 +1,17 @@
 package heap
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 type Cell struct {
 	value    interface{}
 	priority uint32
+}
+
+func (cell *Cell) String() string {
+	return fmt.Sprintf("[%v, %d]", (*cell).value, (*cell).priority)
 }
 
 type HeapNode struct {

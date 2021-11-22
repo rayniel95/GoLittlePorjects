@@ -76,7 +76,7 @@ func TestHeapNode_heapifyDown(t *testing.T) {
 	addRightSon(node2[6], node2[14])
 
 	if !reflect.DeepEqual(nodes[1], node2[1]) {
-		(*t).Errorf("feef")
+		(*t).Errorf("heaps are not equals")
 	}
 }
 

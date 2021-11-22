@@ -26,7 +26,7 @@ import (
 // 	}
 // }
 
-func TestHeapNode_heapifyDown(t *testing.T) {
+func TestHeapNode_heapifyDownMiddleTreeValue(t *testing.T) {
 	nodes := createNodes(1001)
 
 	addLeftSon(nodes[1], nodes[2])

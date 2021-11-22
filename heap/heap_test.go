@@ -52,6 +52,32 @@ func TestHeapNode_heapifyDown(t *testing.T) {
 
 	nodes[1000].heapifyDown()
 
+	node2 := createNodes(1001)
+
+	addLeftSon(node2[1], node2[2])
+	addRightSon(node2[1], node2[5])
+
+	addLeftSon(node2[2], node2[3])
+	addRightSon(node2[2], node2[4])
+
+	addLeftSon(node2[3], node2[7])
+	addRightSon(node2[3], node2[8])
+
+	addLeftSon(node2[4], node2[9])
+	addRightSon(node2[4], node2[10])
+
+	addLeftSon(node2[5], node2[11])
+	addRightSon(node2[5], node2[6])
+
+	addLeftSon(node2[11], node2[1000])
+	addRightSon(node2[11], node2[12])
+
+	addLeftSon(node2[6], node2[13])
+	addRightSon(node2[6], node2[14])
+
+	if !reflect.DeepEqual(nodes[1], node2[1]) {
+		(*t).Errorf("feef")
+	}
 }
 
 func addLeftSon(node, son *HeapNode) {
@@ -127,7 +153,7 @@ func TestHeapTree_update(t *testing.T) {
 				end:          tt.fields.end,
 				parentOfLast: tt.fields.parentOfLast,
 			}
-			tree.update(tt.args.node)
+			tree.Update(tt.args.node)
 		})
 	}
 }
@@ -153,7 +179,7 @@ func TestHeapTree_peek(t *testing.T) {
 				end:          tt.fields.end,
 				parentOfLast: tt.fields.parentOfLast,
 			}
-			got, err := tree.peek()
+			got, err := tree.Peek()
 			if (err != nil) != tt.wantErr {
 				t.Errorf("HeapTree.peek() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -189,7 +215,7 @@ func TestHeapTree_add(t *testing.T) {
 				end:          tt.fields.end,
 				parentOfLast: tt.fields.parentOfLast,
 			}
-			tree.add(tt.args.value, tt.args.priority)
+			tree.Add(tt.args.value, tt.args.priority)
 		})
 	}
 }
@@ -215,7 +241,7 @@ func TestHeapTree_deleteMin(t *testing.T) {
 				end:          tt.fields.end,
 				parentOfLast: tt.fields.parentOfLast,
 			}
-			got, err := tree.deleteMin()
+			got, err := tree.DeleteMin()
 			if (err != nil) != tt.wantErr {
 				t.Errorf("HeapTree.deleteMin() error = %v, wantErr %v", err, tt.wantErr)
 				return

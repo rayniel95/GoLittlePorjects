@@ -83,6 +83,36 @@ func createNodes(number int) []*HeapNode {
 	return nodes
 }
 
+func TestHeapNode_heapifyDownRootTreeValue(t *testing.T) {
+	nodes := createNodes(1001)
+
+	addLeftSon(nodes[1000], nodes[2])
+	addRightSon(nodes[1000], nodes[1])
+
+	addLeftSon(nodes[2], nodes[3])
+	addRightSon(nodes[2], nodes[4])
+
+	addLeftSon(nodes[1], nodes[5])
+	addRightSon(nodes[1], nodes[6])
+
+	nodes[1000].heapifyDown()
+
+	node2 := createNodes(1001)
+
+	addLeftSon(node2[1], node2[2])
+	addRightSon(node2[1], node2[5])
+
+	addLeftSon(node2[2], node2[3])
+	addRightSon(node2[2], node2[4])
+
+	addLeftSon(node2[5], node2[1000])
+	addRightSon(node2[5], node2[6])
+
+	if !reflect.DeepEqual(nodes[1000], node2[1]) {
+		(*t).Errorf("heaps are not equals")
+	}
+}
+
 func TestHeapNode_heapifyUp(t *testing.T) {
 	type fields struct {
 		cell   *Cell

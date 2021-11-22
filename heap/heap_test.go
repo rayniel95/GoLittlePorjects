@@ -5,54 +5,77 @@ import (
 	"testing"
 )
 
-func Test_newHeapNode(t *testing.T) {
-	type args struct {
-		value    *interface{}
-		priority uint32
-	}
-	tests := []struct {
-		name string
-		args args
-		want *HeapNode
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := newHeapNode(tt.args.value, tt.args.priority); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("newHeapNode() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+// func Test_newHeapNode(t *testing.T) {
+// 	type args struct {
+// 		value    *interface{}
+// 		priority uint32
+// 	}
+// 	tests := []struct {
+// 		name string
+// 		args args
+// 		want *HeapNode
+// 	}{
+// 		// TODO: Add test cases.
+// 	}
+// 	for _, tt := range tests {
+// 		t.Run(tt.name, func(t *testing.T) {
+// 			if got := newHeapNode(tt.args.value, tt.args.priority); !reflect.DeepEqual(got, tt.want) {
+// 				t.Errorf("newHeapNode() = %v, want %v", got, tt.want)
+// 			}
+// 		})
+// 	}
+// }
 
 func TestHeapNode_heapifyDown(t *testing.T) {
-	type fields struct {
-		cell   *Cell
-		left   *HeapNode
-		right  *HeapNode
-		parent *HeapNode
+	nodes := createNodes(1001)
+
+	addLeftSon(nodes[1], nodes[2])
+	addRightSon(nodes[1], nodes[1000])
+
+	addLeftSon(nodes[2], nodes[3])
+	addRightSon(nodes[2], nodes[4])
+
+	addLeftSon(nodes[3], nodes[7])
+	addRightSon(nodes[3], nodes[8])
+
+	addLeftSon(nodes[4], nodes[9])
+	addRightSon(nodes[4], nodes[10])
+
+	addLeftSon(nodes[1000], nodes[5])
+	addRightSon(nodes[1000], nodes[6])
+
+	addLeftSon(nodes[5], nodes[11])
+	addRightSon(nodes[5], nodes[12])
+
+	addLeftSon(nodes[6], nodes[13])
+	addRightSon(nodes[6], nodes[14])
+
+	nodes[1000].heapifyDown()
+
+}
+
+func addLeftSon(node, son *HeapNode) {
+	(*node).left = son
+	(*son).parent = node
+}
+
+func addRightSon(node, son *HeapNode) {
+	(*node).right = son
+	(*son).parent = node
+}
+
+func createNodes(number int) []*HeapNode {
+	nodes := make([]*HeapNode, number)
+
+	for index := 0; index < number; index++ {
+		nodes[index] = &HeapNode{
+			cell: &Cell{
+				value:    index,
+				priority: uint32(index),
+			},
+		}
 	}
-	tests := []struct {
-		name    string
-		fields  fields
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			node := &HeapNode{
-				cell:   tt.fields.cell,
-				left:   tt.fields.left,
-				right:  tt.fields.right,
-				parent: tt.fields.parent,
-			}
-			if err := node.heapifyDown(); (err != nil) != tt.wantErr {
-				t.Errorf("HeapNode.heapifyDown() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
+	return nodes
 }
 
 func TestHeapNode_heapifyUp(t *testing.T) {

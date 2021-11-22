@@ -5,27 +5,6 @@ import (
 	"testing"
 )
 
-// func Test_newHeapNode(t *testing.T) {
-// 	type args struct {
-// 		value    *interface{}
-// 		priority uint32
-// 	}
-// 	tests := []struct {
-// 		name string
-// 		args args
-// 		want *HeapNode
-// 	}{
-// 		// TODO: Add test cases.
-// 	}
-// 	for _, tt := range tests {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			if got := newHeapNode(tt.args.value, tt.args.priority); !reflect.DeepEqual(got, tt.want) {
-// 				t.Errorf("newHeapNode() = %v, want %v", got, tt.want)
-// 			}
-// 		})
-// 	}
-// }
-
 func TestHeapNode_heapifyDownMiddleTreeValue(t *testing.T) {
 	nodes := createNodes(1001)
 

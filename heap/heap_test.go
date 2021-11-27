@@ -317,6 +317,89 @@ func TestHeapNode_heapifyDownMiddleTreeValueNotMoved(t *testing.T) {
 	}
 }
 
+func TestHeapNode_heapifyDownMiddleTreeValueheapifyDownOneLevels(t *testing.T) {
+	nodes := createNodes(32)
+
+	addLeftSon(nodes[1], nodes[11])
+	addRightSon(nodes[1], nodes[2])
+
+	addLeftSon(nodes[2], nodes[6])
+	addRightSon(nodes[2], nodes[7])
+
+	addLeftSon(nodes[11], nodes[4])
+	addRightSon(nodes[11], nodes[5])
+
+	addLeftSon(nodes[4], nodes[15])
+	addRightSon(nodes[4], nodes[14])
+
+	addLeftSon(nodes[5], nodes[13])
+	addRightSon(nodes[5], nodes[12])
+
+	addLeftSon(nodes[6], nodes[24])
+	addRightSon(nodes[6], nodes[25])
+
+	addLeftSon(nodes[7], nodes[26])
+	addRightSon(nodes[7], nodes[27])
+
+	addLeftSon(nodes[12], nodes[22])
+	addRightSon(nodes[12], nodes[23])
+
+	addLeftSon(nodes[13], nodes[20])
+	addRightSon(nodes[13], nodes[21])
+
+	addLeftSon(nodes[14], nodes[18])
+	addRightSon(nodes[14], nodes[19])
+
+	addLeftSon(nodes[15], nodes[16])
+	addRightSon(nodes[15], nodes[17])
+
+	nodes[11].heapifyDown()
+
+	node2 := createNodes(32)
+
+	addLeftSon(node2[1], node2[4])
+	addRightSon(node2[1], node2[2])
+
+	addLeftSon(node2[2], node2[6])
+	addRightSon(node2[2], node2[7])
+
+	addLeftSon(node2[4], node2[11])
+	addRightSon(node2[4], node2[5])
+
+	addLeftSon(node2[11], node2[15])
+	addRightSon(node2[11], node2[14])
+
+	addLeftSon(node2[5], node2[13])
+	addRightSon(node2[5], node2[12])
+
+	addLeftSon(node2[6], node2[24])
+	addRightSon(node2[6], node2[25])
+
+	addLeftSon(node2[7], node2[26])
+	addRightSon(node2[7], node2[27])
+
+	addLeftSon(node2[12], node2[22])
+	addRightSon(node2[12], node2[23])
+
+	addLeftSon(node2[13], node2[20])
+	addRightSon(node2[13], node2[21])
+
+	addLeftSon(node2[14], node2[18])
+	addRightSon(node2[14], node2[19])
+
+	addLeftSon(node2[15], node2[16])
+	addRightSon(node2[15], node2[17])
+
+	// result := make([]byte, 0)
+	// for index := 0; index < len(md5.Sum([]byte("https://cu.linkedin.com/in/amaury95"))); index++ {
+	// 	result = append(result, md5.Sum([]byte("https://cu.linkedin.com/in/amaury95"))[index])
+	// }
+	// log.Println(binary.BigEndian.Uint64(result))
+	if !reflect.DeepEqual(nodes[1], node2[1]) {
+		(*t).Errorf("heaps are not equals")
+	}
+}
+
 func TestHeapNode_heapifyUp(t *testing.T) {
 	type fields struct {
 		cell   *Cell

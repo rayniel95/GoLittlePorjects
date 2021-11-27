@@ -509,6 +509,36 @@ func TestHeapNode_heapifyUpToRoot(t *testing.T) {
 	}
 }
 
+func TestHeapNode_heapifyUpToRootOneLevel(t *testing.T) {
+	nodes := createNodes(32)
+
+	addLeftSon(nodes[2], nodes[3])
+	addRightSon(nodes[2], nodes[1])
+
+	addLeftSon(nodes[1], nodes[6])
+	addRightSon(nodes[1], nodes[7])
+
+	addLeftSon(nodes[3], nodes[4])
+	addRightSon(nodes[3], nodes[5])
+
+	nodes[1].heapifyUp()
+
+	node2 := createNodes(32)
+
+	addLeftSon(node2[1], node2[3])
+	addRightSon(node2[1], node2[2])
+
+	addLeftSon(node2[2], node2[6])
+	addRightSon(node2[2], node2[7])
+
+	addLeftSon(node2[3], node2[4])
+	addRightSon(node2[3], node2[5])
+
+	if !reflect.DeepEqual(nodes[2], node2[1]) {
+		(*t).Errorf("heaps are not equals")
+	}
+}
+
 func (tree *HeapNode) print() {
 	fmt.Println((*((*tree).cell)).priority)
 	if (*tree).left != nil {

@@ -1,6 +1,7 @@
 package heap
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 )
@@ -397,6 +398,95 @@ func TestHeapNode_heapifyDownMiddleTreeValueheapifyDownOneLevels(t *testing.T) {
 	// log.Println(binary.BigEndian.Uint64(result))
 	if !reflect.DeepEqual(nodes[1], node2[1]) {
 		(*t).Errorf("heaps are not equals")
+	}
+}
+
+func TestHeapNode_heapifyDownMiddleTreeValueheapifyDownTwoLevels(t *testing.T) {
+	nodes := createNodes(32)
+
+	addLeftSon(nodes[1], nodes[3])
+	addRightSon(nodes[1], nodes[12])
+
+	addLeftSon(nodes[3], nodes[4])
+	addRightSon(nodes[3], nodes[5])
+
+	addLeftSon(nodes[12], nodes[6])
+	addRightSon(nodes[12], nodes[7])
+
+	addLeftSon(nodes[4], nodes[15])
+	addRightSon(nodes[4], nodes[14])
+
+	addLeftSon(nodes[5], nodes[13])
+	addRightSon(nodes[5], nodes[22])
+
+	addLeftSon(nodes[6], nodes[11])
+	addRightSon(nodes[6], nodes[10])
+
+	addLeftSon(nodes[7], nodes[9])
+	addRightSon(nodes[7], nodes[8])
+
+	addLeftSon(nodes[11], nodes[24])
+	addRightSon(nodes[11], nodes[25])
+
+	addLeftSon(nodes[10], nodes[26])
+	addRightSon(nodes[10], nodes[27])
+
+	addLeftSon(nodes[9], nodes[28])
+	addRightSon(nodes[9], nodes[29])
+
+	addLeftSon(nodes[8], nodes[30])
+	addRightSon(nodes[8], nodes[31])
+
+	nodes[12].heapifyDown()
+
+	node2 := createNodes(32)
+
+	addLeftSon(node2[1], node2[3])
+	addRightSon(node2[1], node2[6])
+
+	addLeftSon(node2[3], node2[4])
+	addRightSon(node2[3], node2[5])
+
+	addLeftSon(node2[6], node2[10])
+	addRightSon(node2[6], node2[7])
+
+	addLeftSon(node2[4], node2[15])
+	addRightSon(node2[4], node2[14])
+
+	addLeftSon(node2[5], node2[13])
+	addRightSon(node2[5], node2[22])
+
+	addLeftSon(node2[10], node2[11])
+	addRightSon(node2[10], node2[12])
+
+	addLeftSon(node2[7], node2[9])
+	addRightSon(node2[7], node2[8])
+
+	addLeftSon(node2[11], node2[24])
+	addRightSon(node2[11], node2[25])
+
+	addLeftSon(node2[12], node2[26])
+	addRightSon(node2[12], node2[27])
+
+	addLeftSon(node2[9], node2[28])
+	addRightSon(node2[9], node2[29])
+
+	addLeftSon(node2[8], node2[30])
+	addRightSon(node2[8], node2[31])
+
+	node2[1].print()
+	if !reflect.DeepEqual(nodes[1], node2[1]) {
+		(*t).Errorf("heaps are not equals")
+	}
+}
+
+func (tree *HeapNode) print() {
+	fmt.Println((*((*tree).cell)).priority)
+	if (*tree).left != nil {
+		(*tree).left.print()
+	}
+	if (*tree).right != nil {
+		(*tree).right.print()
 	}
 }
 

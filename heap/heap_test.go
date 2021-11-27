@@ -474,8 +474,37 @@ func TestHeapNode_heapifyDownMiddleTreeValueheapifyDownTwoLevels(t *testing.T) {
 	addLeftSon(node2[8], node2[30])
 	addRightSon(node2[8], node2[31])
 
-	node2[1].print()
 	if !reflect.DeepEqual(nodes[1], node2[1]) {
+		(*t).Errorf("heaps are not equals")
+	}
+}
+
+func TestHeapNode_heapifyUpToRoot(t *testing.T) {
+	nodes := createNodes(32)
+
+	addLeftSon(nodes[2], nodes[6])
+	addRightSon(nodes[2], nodes[12])
+
+	addLeftSon(nodes[6], nodes[7])
+	addRightSon(nodes[6], nodes[8])
+
+	addLeftSon(nodes[12], nodes[15])
+	addRightSon(nodes[12], nodes[1])
+
+	nodes[1].heapifyUp()
+
+	node2 := createNodes(32)
+
+	addLeftSon(node2[1], node2[6])
+	addRightSon(node2[1], node2[2])
+
+	addLeftSon(node2[6], node2[7])
+	addRightSon(node2[6], node2[8])
+
+	addLeftSon(node2[2], node2[15])
+	addRightSon(node2[2], node2[12])
+
+	if !reflect.DeepEqual(nodes[2], node2[1]) {
 		(*t).Errorf("heaps are not equals")
 	}
 }

@@ -706,29 +706,66 @@ func (tree *HeapNode) print() {
 	}
 }
 
-// TODO: Add fuzzy tests
-
-func TestHeapTree_fuzzyAddDeleteManyNodes(t *testing.T) {
+func TestHeapTree_fuzzyAddDelete(t *testing.T) {
 	heap := &HeapTree{}
-	for times := 0; times < 10000000; times++ {
-		new := rand.Uint32()
-		heap.Add(new, new)
-	}
+	for input_cantity := 1; input_cantity < 20000; input_cantity++ {
+		elements := make([]uint32, 0, input_cantity)
+		rand.Seed(int64(input_cantity))
 
-	_, cell := heap.DeleteMin()
-	min := (*cell).priority
-	for times := 1; times < 10000000; times++ {
-		err, new_min_cell := heap.DeleteMin()
+		for times := 0; times < input_cantity; times++ {
+			new := rand.Uint32()
+			heap.Add(new, new)
+			elements = append(elements, new)
+		}
+
+		err, cell := heap.DeleteMin()
+		min := (*cell).priority
+
 		if err != nil {
 			t.Errorf("not all values unpacked")
 		}
-		new_min := (*new_min_cell).priority
-		if new_min < min {
-			t.Error("last poped value is smallest than previous values")
+
+		for times := 1; times < input_cantity; times++ {
+			err, new_min_cell := heap.DeleteMin()
+			if err != nil {
+				t.Errorf("not all values unpacked")
+			}
+			new_min := (*new_min_cell).priority
+			if new_min < min {
+				fmt.Println(elements)
+				t.Errorf("number of elements: %d", input_cantity)
+				t.Errorf("last poped value %d is smallest than previous %d values", new_min, min)
+				return
+			}
+			min = new_min
 		}
-		min = new_min
+		if (*heap).Len() != 0 {
+			t.Error("len is not 0")
+		}
 	}
 }
+
+// func TestHeapTree_fuzzyAddDeleteOneNode(t *testing.T) {
+// 	heap := &HeapTree{}
+// 	for times := 0; times < 1; times++ {
+// 		new := rand.Uint32()
+// 		heap.Add(new, new)
+// 	}
+
+// 	_, cell := heap.DeleteMin()
+// 	min := (*cell).priority
+// 	for times := 1; times < 1; times++ {
+// 		err, new_min_cell := heap.DeleteMin()
+// 		if err != nil {
+// 			t.Errorf("not all values unpacked")
+// 		}
+// 		new_min := (*new_min_cell).priority
+// 		if new_min < min {
+// 			t.Error("last poped value is smallest than previous values")
+// 		}
+// 		min = new_min
+// 	}
+// }
 
 func TestHeapTree_update(t *testing.T) {
 	type fields struct {

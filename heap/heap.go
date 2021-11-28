@@ -77,6 +77,7 @@ type HeapTree struct {
 	start        *LinkedNode
 	end          *LinkedNode
 	parentOfLast *LinkedNode
+	len          uint32
 }
 
 func (tree *HeapTree) Peek() (error, *Cell) {
@@ -93,6 +94,7 @@ func (tree *HeapTree) Add(value interface{}, priority uint32) {
 		}
 		(*tree).start = newLinkedNode
 		(*tree).end = newLinkedNode
+		(*tree).len++
 		return
 	}
 	if (*tree).start == (*tree).end {
@@ -112,6 +114,7 @@ func (tree *HeapTree) Add(value interface{}, priority uint32) {
 		}
 		(*((*tree).start)).next = newLinkedNode
 		(*tree).end = newLinkedNode
+		(*tree).len++
 		newHeapNode.heapifyUp()
 		return
 	}
@@ -139,7 +142,7 @@ func (tree *HeapTree) Add(value interface{}, priority uint32) {
 	}
 	(*((*tree).end)).next = newLinkedNode
 	(*tree).end = newLinkedNode
-
+	(*tree).len++
 	newHeapNode.heapifyUp()
 }
 
@@ -147,6 +150,7 @@ func (tree *HeapTree) DeleteMin() (error, *Cell) {
 	if (*tree).start == nil {
 		return errors.New("empty heap"), nil
 	}
+	(*tree).len--
 	_, min := (*tree).Peek()
 	lastNode := (*((*tree).end)).val
 	valueOfLast := (*lastNode).cell
@@ -175,4 +179,8 @@ func (tree *HeapTree) DeleteMin() (error, *Cell) {
 		(*((*tree).start)).val.heapifyDown()
 	}
 	return nil, min
+}
+
+func (tree *HeapTree) Len() uint32 {
+	return (*tree).len
 }

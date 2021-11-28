@@ -2,6 +2,7 @@ package heap
 
 import (
 	"fmt"
+	"math/rand"
 	"reflect"
 	"testing"
 )
@@ -705,29 +706,27 @@ func (tree *HeapNode) print() {
 	}
 }
 
-func TestHeapNode_heapifyUp(t *testing.T) {
-	type fields struct {
-		cell   *Cell
-		left   *HeapNode
-		right  *HeapNode
-		parent *HeapNode
+// TODO: Add fuzzy tests
+
+func TestHeapTree_fuzzyAddDeleteManyNodes(t *testing.T) {
+	heap := &HeapTree{}
+	for times := 0; times < 10000000; times++ {
+		new := rand.Uint32()
+		heap.Add(new, new)
 	}
-	tests := []struct {
-		name   string
-		fields fields
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			node := &HeapNode{
-				cell:   tt.fields.cell,
-				left:   tt.fields.left,
-				right:  tt.fields.right,
-				parent: tt.fields.parent,
-			}
-			node.heapifyUp()
-		})
+
+	_, cell := heap.DeleteMin()
+	min := (*cell).priority
+	for times := 1; times < 10000000; times++ {
+		err, new_min_cell := heap.DeleteMin()
+		if err != nil {
+			t.Errorf("not all values unpacked")
+		}
+		new_min := (*new_min_cell).priority
+		if new_min < min {
+			t.Error("last poped value is smallest than previous values")
+		}
+		min = new_min
 	}
 }
 
@@ -792,34 +791,34 @@ func TestHeapTree_peek(t *testing.T) {
 	}
 }
 
-func TestHeapTree_add(t *testing.T) {
-	type fields struct {
-		start        *LinkedNode
-		end          *LinkedNode
-		parentOfLast *LinkedNode
-	}
-	type args struct {
-		value    *interface{}
-		priority uint32
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tree := &HeapTree{
-				start:        tt.fields.start,
-				end:          tt.fields.end,
-				parentOfLast: tt.fields.parentOfLast,
-			}
-			tree.Add(tt.args.value, tt.args.priority)
-		})
-	}
-}
+// func TestHeapTree_add(t *testing.T) {
+// 	type fields struct {
+// 		start        *LinkedNode
+// 		end          *LinkedNode
+// 		parentOfLast *LinkedNode
+// 	}
+// 	type args struct {
+// 		value    *interface{}
+// 		priority uint32
+// 	}
+// 	tests := []struct {
+// 		name   string
+// 		fields fields
+// 		args   args
+// 	}{
+// 		// TODO: Add test cases.
+// 	}
+// 	for _, tt := range tests {
+// 		t.Run(tt.name, func(t *testing.T) {
+// 			tree := &HeapTree{
+// 				start:        tt.fields.start,
+// 				end:          tt.fields.end,
+// 				parentOfLast: tt.fields.parentOfLast,
+// 			}
+// 			tree.Add(tt.args.value, tt.args.priority)
+// 		})
+// 	}
+// }
 
 func TestHeapTree_deleteMin(t *testing.T) {
 	type fields struct {

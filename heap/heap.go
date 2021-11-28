@@ -150,8 +150,9 @@ func (tree *HeapTree) DeleteMin() (error, *Cell) {
 	lastNode := (*((*tree).end)).val
 	valueOfLast := (*lastNode).cell
 
-	parent := (*((*tree).parentOfLast)).val
-	if parent != nil {
+	parentLink := (*tree).parentOfLast
+	if parentLink != nil {
+		parent := (*parentLink).val
 		if (*parent).right == lastNode {
 			(*parent).right = nil
 		} else if (*parent).left == lastNode {

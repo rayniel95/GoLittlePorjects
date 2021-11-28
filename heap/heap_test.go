@@ -539,6 +539,84 @@ func TestHeapNode_heapifyUpToRootOneLevel(t *testing.T) {
 	}
 }
 
+func TestHeapNode_heapifyUpToMiddleTwoLevel(t *testing.T) {
+	nodes := createNodes(40)
+
+	addLeftSon(nodes[1], nodes[2])
+	addRightSon(nodes[1], nodes[19])
+
+	addLeftSon(nodes[2], nodes[4])
+	addRightSon(nodes[2], nodes[5])
+
+	addLeftSon(nodes[4], nodes[11])
+	addRightSon(nodes[4], nodes[10])
+
+	addLeftSon(nodes[5], nodes[9])
+	addRightSon(nodes[5], nodes[8])
+
+	addLeftSon(nodes[19], nodes[6])
+	addRightSon(nodes[19], nodes[20])
+
+	addLeftSon(nodes[6], nodes[18])
+	addRightSon(nodes[6], nodes[17])
+
+	addLeftSon(nodes[18], nodes[30])
+	addRightSon(nodes[18], nodes[31])
+
+	addLeftSon(nodes[17], nodes[32])
+	addRightSon(nodes[17], nodes[33])
+
+	addLeftSon(nodes[20], nodes[7])
+	addRightSon(nodes[20], nodes[12])
+
+	addLeftSon(nodes[7], nodes[34])
+	addRightSon(nodes[7], nodes[35])
+
+	addLeftSon(nodes[12], nodes[36])
+	addRightSon(nodes[12], nodes[37])
+
+	nodes[12].heapifyUp()
+
+	node2 := createNodes(40)
+
+	addLeftSon(node2[1], node2[2])
+	addRightSon(node2[1], node2[12])
+
+	addLeftSon(node2[2], node2[4])
+	addRightSon(node2[2], node2[5])
+
+	addLeftSon(node2[4], node2[11])
+	addRightSon(node2[4], node2[10])
+
+	addLeftSon(node2[5], node2[9])
+	addRightSon(node2[5], node2[8])
+
+	addLeftSon(node2[19], node2[7])
+	addRightSon(node2[19], node2[20])
+
+	addLeftSon(node2[6], node2[18])
+	addRightSon(node2[6], node2[17])
+
+	addLeftSon(node2[18], node2[30])
+	addRightSon(node2[18], node2[31])
+
+	addLeftSon(node2[17], node2[32])
+	addRightSon(node2[17], node2[33])
+
+	addLeftSon(node2[20], node2[36])
+	addRightSon(node2[20], node2[37])
+
+	addLeftSon(node2[7], node2[34])
+	addRightSon(node2[7], node2[35])
+
+	addLeftSon(node2[12], node2[6])
+	addRightSon(node2[12], node2[19])
+
+	if !reflect.DeepEqual(nodes[1], node2[1]) {
+		(*t).Errorf("heaps are not equals")
+	}
+}
+
 func (tree *HeapNode) print() {
 	fmt.Println((*((*tree).cell)).priority)
 	if (*tree).left != nil {

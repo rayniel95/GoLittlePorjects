@@ -112,6 +112,7 @@ func (tree *HeapTree) Add(value interface{}, priority uint32) {
 		}
 		(*((*tree).start)).next = newLinkedNode
 		(*tree).end = newLinkedNode
+		newHeapNode.heapifyUp()
 		return
 	}
 

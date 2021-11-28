@@ -745,28 +745,6 @@ func TestHeapTree_fuzzyAddDelete(t *testing.T) {
 	}
 }
 
-// func TestHeapTree_fuzzyAddDeleteOneNode(t *testing.T) {
-// 	heap := &HeapTree{}
-// 	for times := 0; times < 1; times++ {
-// 		new := rand.Uint32()
-// 		heap.Add(new, new)
-// 	}
-
-// 	_, cell := heap.DeleteMin()
-// 	min := (*cell).priority
-// 	for times := 1; times < 1; times++ {
-// 		err, new_min_cell := heap.DeleteMin()
-// 		if err != nil {
-// 			t.Errorf("not all values unpacked")
-// 		}
-// 		new_min := (*new_min_cell).priority
-// 		if new_min < min {
-// 			t.Error("last poped value is smallest than previous values")
-// 		}
-// 		min = new_min
-// 	}
-// }
-
 func TestHeapTree_update(t *testing.T) {
 	type fields struct {
 		start        *LinkedNode
